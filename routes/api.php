@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ProductApiController;
 use App\Http\Controllers\API\ProductCategoryApiController;
+use App\Http\Controllers\API\TransactionApiController;
+use App\Http\Controllers\API\UserApiController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,13 +19,22 @@ use App\Http\Controllers\API\ProductCategoryApiController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('products', [ProductApiController::class, 'all']);
-Route::get('categories', [ProductCategoriesApiController::class , 'all']);
-Route::get('register', [UserApiController::class , 'register']);
+Route::get('categories', [ProductCategoryApiController::class , 'all']);
+Route::post('register', [UserApiController::class , 'register']);
+Route::post('login', [UserApiController::class , 'login']);
 
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('user', [UserApiController::class, 'fetch']);
+    Route::post('user' , [UserApiController::class, 'updateProfile']);
+    Route::post('logout' , [UserApiController::class, 'logout']);
+
+    Route::get('transaction', [TransactionApiController::class, 'all']);
+    Route::post('checkout', [TransactionApiController::class, 'checkout']);
+});
 
 
